@@ -40,15 +40,18 @@ namespace iTextSharp.text.pdf.security {
         }
 
         public virtual byte[] Sign(byte[] message) {
-            if (certificate.PrivateKey is RSACryptoServiceProvider) {
-                // Force rsa all PrivateKey properties 
-                //Including  Private Parameters  
-                //Instead of cast  that does not always work
-                RSACryptoServiceProvider rsa = new   RSACryptoServiceProvider() ;
-                rsa.FromXmlString(certificate.PrivateKey.ToXmlString(true)) ;      
+            // Force rsa all PrivateKey properties 
+            //Including  Private Parameters  
+            //Instead of cast  that does not always work
+            //RSACryptoServiceProvider rsa = new   RSACryptoServiceProvider() ;
+            //rsa.FromXmlString(certificate.PrivateKey.ToXmlString(true)) ;
+
+            if (certificate.PrivateKey is RSACryptoServiceProvider rsa)
+            {
                 return rsa.SignData(message, hashAlgorithm);
             }
-            else {
+            else
+            {
                 DSACryptoServiceProvider dsa = (DSACryptoServiceProvider)certificate.PrivateKey;
                 return dsa.SignData(message);
             }
